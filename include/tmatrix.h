@@ -94,7 +94,7 @@ public:
   T& at(size_t ind)
   {
       if (ind >= sz)
-          throw out_of_range{"Wrong TDynamicVector index"};
+          throw out_of_range{ "Wrong TDynamicVector index" };
       return pMem[ind];
   }
   const T& at(size_t ind) const
@@ -205,8 +205,8 @@ class TDynamicMatrix : private TDynamicVector<TDynamicVector<T>>
 public:
   TDynamicMatrix(size_t s = 1) : TDynamicVector<TDynamicVector<T>>(s)
   {
-    if (sz >= MAX_MATRIX_SIZE)
-        throw length_error("TDynamicMatrix size shouldn't be greater than MAX_MATRIX_SIZE");
+      if (sz >= MAX_MATRIX_SIZE)
+          throw length_error("TDynamicMatrix size shouldn't be greater than MAX_MATRIX_SIZE");
     for (size_t i = 0; i < sz; i++)
       pMem[i] = TDynamicVector<T>(sz);
   }
@@ -226,19 +226,21 @@ public:
   // матрично-скалярные операции
   TDynamicMatrix operator*(const T& val)
   {
-      return TDynamicVector<TDynamicVector<T>>::operator*(val);
+      TDynamicMatrix t(*this);
+      for (size_t i = 0; i < sz; i++)
+          t[i] = t[i] * val;
+      return t;
   }
 
   // матрично-векторные операции
   TDynamicVector<T> operator*(const TDynamicVector<T>& v)
   {
-      if (sz != v.sz)
+      if (sz != v.size())
           throw length_error{ "TDynamicMatrix and TDynamicVector should have equal size" };
 
       TDynamicVector<T> t(sz);
       for (size_t i = 0; i < sz; i++)
-          for (size_t j = 0; j < sz; j++)
-              t[i] = t[i] + pMem[i][j] * v[i];
+          t[i] = pMem[i] * v;
 
       return t;
   }
