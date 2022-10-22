@@ -8,6 +8,7 @@
 #define __TDynamicMatrix_H__
 
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -125,21 +126,21 @@ public:
   {
       TDynamicVector t(*this);
       for (size_t i = 0; i < sz; i++)
-          t.pMem[i] += val;
+          t.pMem[i] = t.pMem[i] + val;
       return t;
   }
   TDynamicVector operator-(T val)
   {
       TDynamicVector t(*this);
       for (size_t i = 0; i < sz; i++)
-          t.pMem[i] -= val;
+          t.pMem[i] = t.pMem[i] - val;
       return t;
   }
   TDynamicVector operator*(T val)
   {
       TDynamicVector t(*this);
       for (size_t i = 0; i < sz; i++)
-          t.pMem[i] *= val;
+          t.pMem[i] = t.pMem[i] * val;
       return t;
   }
 
@@ -168,7 +169,7 @@ public:
           throw length_error{ "TDynamicVectors should have equal size" };
       T t{};
       for (size_t i = 0; i < sz; i++)
-          t += this->pMem[i] * v.pMem[i];
+          t = t + this->pMem[i] * v.pMem[i];
       return t;
   }
 
@@ -188,7 +189,7 @@ public:
   friend ostream& operator<<(ostream& ostr, const TDynamicVector& v)
   {
     for (size_t i = 0; i < v.sz; i++)
-      ostr << v.pMem[i] << ' '; // требуется оператор<< для типа T
+      ostr << setw(4) << v.pMem[i] << ' '; // требуется оператор<< для типа T
     return ostr;
   }
 };
@@ -237,7 +238,7 @@ public:
       TDynamicVector<T> t(sz);
       for (size_t i = 0; i < sz; i++)
           for (size_t j = 0; j < sz; j++)
-              t[i] += pMem[i][j] * v[i];
+              t[i] = t[i] + pMem[i][j] * v[i];
 
       return t;
   }
@@ -253,11 +254,11 @@ public:
   }
   TDynamicMatrix operator*(const TDynamicMatrix& m)
   {
-      if (sz != v.sz)
+      if (sz != m.sz)
           throw length_error{ "TDynamicMatrixs should have equal size" };
       
       TDynamicMatrix t(sz);
-      TDynamicVector v(sz);
+      TDynamicVector<T> v(sz);
 
       for (size_t j = 0; j < sz; j++) {
           for (size_t i = 0; i < sz; i++)

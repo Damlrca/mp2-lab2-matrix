@@ -228,7 +228,7 @@ TEST(TDynamicVector, can_multiply_vectors_with_equal_size) //+
 	ASSERT_NO_THROW(v = v1 * v2);
 	int t = 0;
 	for (int i = 0; i < 10; i++)
-		t += 2 * i * i;
+		t = t + 2 * i * i;
 	EXPECT_EQ(v, t);
 }
 
