@@ -36,14 +36,14 @@ public:
   {
     assert(sz != 0 && "TDynamicVector size should be greater than zero");
     assert(arr != nullptr && "TDynamicVector ctor requires non-nullptr arg");
-    pMem = new T[sz];
-    std::uninitialized_copy(arr, arr + sz, pMem);
+    pMem = new T[sz]{}; // У типа T д.б. констуктор по умолчанию
+    std::copy(arr, arr + sz, pMem);
   }
 
   TDynamicVector(const TDynamicVector& v) : sz(v.sz)
   {
-    pMem = new T[sz];
-    std::uninitialized_copy(v.pMem, v.pMem + sz, pMem);
+    pMem = new T[sz]{}; // У типа T д.б. констуктор по умолчанию
+    std::copy(v.pMem, v.pMem + sz, pMem);
   }
 
   TDynamicVector(TDynamicVector&& v) noexcept
@@ -64,12 +64,9 @@ public:
     if (sz != v.sz) {
         delete[] pMem;
         sz = v.sz;
-        pMem = new T[sz];
-        std::uninitialized_copy(v.pMem, v.pMem + sz, pMem);
+        pMem = new T[sz]{};
     }
-    else {
-        std::copy(v.pMem, v.pMem + sz, pMem);
-    }
+    std::copy(v.pMem, v.pMem + sz, pMem);
 
     return *this;
   }
